@@ -1,5 +1,6 @@
 certifi==2023.7.22
 charset-normalizer==3.2.0
+colorama==0.4.6
 et-xmlfile==1.1.0
 idna==3.4
 numpy==1.25.2
@@ -10,5 +11,6 @@ pytz==2023.3
 requests==2.31.0
 rubrik-cdm==2.0.10
 six==1.16.0
+tqdm==4.66.1
 tzdata==2023.3
 urllib3==2.0.4

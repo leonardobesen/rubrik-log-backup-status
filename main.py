@@ -3,14 +3,13 @@ import os
 import connection.connect as connect
 import view.write_to_csv as write_to_csv
 import datetime
-import tqdm
 
 # Global variables 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPORT_PATH = os.path.join(ROOT_DIR, 'reports')
 CONFIG_FILE = os.path.join(ROOT_DIR, 'configuration', 'config.json')
 
-def count_objects(backup_objects: list[dict], cluster_name) -> tuple(dict, list[dict]):
+def count_objects(backup_objects: list[dict], cluster_name: str):
     # Defining track variables
     objects_out_of_compliance = []
     cluster_compliance_count = {
@@ -21,14 +20,15 @@ def count_objects(backup_objects: list[dict], cluster_name) -> tuple(dict, list[
         "Oracle"      : {"OK": 0, "NOK": 0},
     }
 
-    for backup_object in tqdm(backup_objects, desc=f"Processing objects for {cluster_name}"):
+    print(f"Processing object for {cluster_name}")
+    for backup_object in backup_objects:
         # This fields might not be returned by the API response
         try:
             log_backup_frequency = datetime.timedelta(seconds=backup_object["logBackupFrequency"])
             log_delay = datetime.timedelta(seconds=backup_object["logBackupDelay"])
             object_type = backup_object["databaseType"]
         except:
-            return {}
+            continue
 
         # Add to count
         if log_delay > log_backup_frequency:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         cluster_name = cluster['cluster_dc']
 
         # Get Rubrik CDM name
-        print("Querying API")
+        print(f"Querying API for {cluster_name}")
         log_report = rubrik_conn.get('v1', '/database/log_report')
 
         # Check if data is not null
