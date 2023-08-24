@@ -58,7 +58,8 @@ if __name__ == '__main__':
 
         # Get Rubrik CDM name
         print(f"Querying API for {cluster_name}")
-        log_report = rubrik_conn.get('v1', '/database/log_report')
+        limit = 30000
+        log_report = rubrik_conn.get('v1', f'/database/log_report?limit={limit}')
 
         # Check if data is not null
         if not log_report["data"]:
