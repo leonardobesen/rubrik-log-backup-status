@@ -1,11 +1,12 @@
 # rubrik-log-backup-status
-A Python script that get Log Backup status for all object on each Rubrik Cluster on the enviroment.
+A Python script that get a snapshot of Log Backup status for all object on each Rubrik Cluster on the enviroment.
 
 ## Dependencies
 
 This projects requires the following libraries to work:
 - `rubrik_cdm`
-- `pandas` (If you want to send Excel reports through email)
+- `pandas`
+- `openpyxl`
 
 ## How to use it.
 

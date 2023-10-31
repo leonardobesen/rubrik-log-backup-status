@@ -2,7 +2,9 @@ import pandas as pd
 import os
 from datetime import datetime
 
-def create_file(REPORT_PATH: str, overall_log_compliance_status: list[dict], backup_objects_out_of_compliance: list[dict]):
+
+def create_file(REPORT_PATH: str, overall_log_compliance_status: list[dict],
+                backup_objects_in_compliance: list[dict], backup_objects_out_of_compliance: list[dict]):
     # Get now datetime info formatted
     now = datetime.now().strftime("%d-%m-%Y_%H_%M_%S")
 
@@ -14,6 +16,10 @@ def create_file(REPORT_PATH: str, overall_log_compliance_status: list[dict], bac
 
     df = pd.DataFrame(overall_log_compliance_status)
     df.to_excel(writer, sheet_name='Objects Status', index=False)
+
+    if backup_objects_in_compliance:
+        df = pd.DataFrame(backup_objects_in_compliance)
+        df.to_excel(writer, sheet_name="Objects In Compliance", index=False)
 
     if backup_objects_out_of_compliance:
         df = pd.DataFrame(backup_objects_out_of_compliance)
