@@ -24,7 +24,6 @@ def analyze_objects(backup_objects: list[dict], cluster_datacenter: str):
         "Oracle_NOK": 0,
     }
 
-    print(f"Processing object for {cluster_datacenter}")
     for backup_object in backup_objects:
         # Adding Cluster Datacenter to backup_object dictionary
         backup_object.update({"cluster": cluster_datacenter})
@@ -34,7 +33,7 @@ def analyze_objects(backup_objects: list[dict], cluster_datacenter: str):
 
         # This fields might be non-numerical
         try:
-            log_backup_frequency = datetime.timedelta(
+            log_backup_frequency = 2 * datetime.timedelta(
                 seconds=backup_object["logBackupFrequency"])
         except:
             log_backup_frequency = datetime.timedelta(minutes=0)
@@ -72,27 +71,31 @@ if __name__ == '__main__':
 
     # Looping through clusters to perform daily check
     for cluster in config_parse['clusters']:
-        # Establish connection with Rubrik CDM and Cluster name
-        rubrik_conn = connect.connect_to_cluster(
-            cluster['cluster_address'], cluster['api_token'])
-        cluster_datacenter = cluster['cluster_dc']
+        try:
+            # Establish connection with Rubrik CDM and Cluster name
+            rubrik_conn = connect.connect_to_cluster(
+                cluster['cluster_address'], cluster['api_token'])
+            cluster_datacenter = cluster['cluster_dc']
 
-        # Get Rubrik CDM name
-        print(f"Querying API for {cluster_datacenter}")
-        limit = 30000
-        log_report = rubrik_conn.get(
-            'v1', f'/database/log_report?limit={limit}')
+            # Get Rubrik CDM name
+            print(f"Querying API for {cluster_datacenter}")
+            limit = 30000
+            log_report = rubrik_conn.get(
+                'v1', f'/database/log_report?limit={limit}', timeout=600)
 
-        # Check if data is not null
-        if not log_report["data"]:
+            # Check if data is not null
+            if not log_report["data"]:
+                continue
+
+            cluster_compliance_count, objects_in_compliance, objects_out_of_compliance = analyze_objects(
+                log_report["data"], cluster_datacenter)
+
+            overall_log_compliance_status.append(cluster_compliance_count)
+            backup_objects_in_compliance += objects_in_compliance
+            backup_objects_out_of_compliance += objects_out_of_compliance
+        except:
+            print(f"Unable to collect data for {cluster['cluster_dc']}")
             continue
-
-        cluster_compliance_count, objects_in_compliance, objects_out_of_compliance = analyze_objects(
-            log_report["data"], cluster_datacenter)
-
-        overall_log_compliance_status.append(cluster_compliance_count)
-        backup_objects_in_compliance += objects_in_compliance
-        backup_objects_out_of_compliance += objects_out_of_compliance
 
     # Send data somewhere
     print("Writing to file")
