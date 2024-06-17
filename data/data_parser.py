@@ -44,7 +44,7 @@ def _parse_databases_from_cluster(access_token: str, cluster: Cluster) -> list[D
         try:
             response = request(access_token, query, variables)
         except Exception:
-            print(f"Unable to collect database data for {cluster.name}!")
+            print(f"Unable to fetch a page from report for {cluster.name}!")
             continue
 
         if not response["data"]:
