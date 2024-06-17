@@ -22,17 +22,17 @@ def create_empty_file() -> str:
     return report_path
 
 
-def generate_report(cluster_info: list) -> str:
+def generate_report(summary: dict, in_compliance: list[Database], non_compliance: list[Database]) -> str:
     REPORT_FILE = create_empty_file()
 
     writer = pd.ExcelWriter(REPORT_FILE, engine='openpyxl')
 
     writer = write_summary_data(
-        writer, cluster_info)
+        writer, summary)
     writer = write_compliance_data(
-        writer, cluster_info, in_compliance=True)
+        writer, in_compliance, in_compliance=True)
     writer = write_compliance_data(
-        writer, cluster_info, in_compliance=False)
+        writer, non_compliance, in_compliance=False)
 
     writer.close()
 
@@ -43,13 +43,13 @@ def write_summary_data(writer: pd.ExcelWriter, summary: dict) -> pd.ExcelWriter:
     writer.book.create_sheet(title=Sheets.SUMMARY.value)
 
     df_summary = pd.DataFrame([{
-        'Cluster': cluster["Cluster"],
-        'OK': cluster["OK"],
-        'NOK': cluster["NOK"],
-        'SQL OK': cluster["SQL_OK"],
-        'SQL NOK': cluster["SQL_NOK"],
-        'Oracle OK': cluster["ORACLE_OK"],
-        'Oracle NOK': cluster["ORACLE_NOK"]
+        'Cluster': cluster,
+        'OK': summary[cluster]["OK"],
+        'NOK': summary[cluster]["NOK"],
+        'SQL OK': summary[cluster]["SQL_OK"],
+        'SQL NOK': summary[cluster]["SQL_NOK"],
+        'Oracle OK': summary[cluster]["ORACLE_OK"],
+        'Oracle NOK': summary[cluster]["ORACLE_NOK"]
     } for cluster in summary])
     df_summary.to_excel(writer, sheet_name=Sheets.SUMMARY.value, index=False)
 

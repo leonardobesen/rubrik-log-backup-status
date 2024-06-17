@@ -35,6 +35,7 @@ def _parse_databases_from_cluster(access_token: str, cluster: Cluster) -> list[D
     databases_info_at_cluster = []
 
     while has_more:
+        has_more = False
         query, variables = queries.get_log_backup_status_by_cluster(
             cluster_id=cluster.id,
             offset=offset,
@@ -50,9 +51,9 @@ def _parse_databases_from_cluster(access_token: str, cluster: Cluster) -> list[D
             continue
 
         for item in response["data"]["databaseLogReportForCluster"]["data"]:
-            cluster = data.create_cluster_from_data(item)
-            if cluster:
-                databases_info_at_cluster.append(cluster)
+            database = data.create_database_from_data(item, cluster)
+            if database:
+                databases_info_at_cluster.append(database)
 
         has_more = response["data"]["databaseLogReportForCluster"]["hasMore"]
         offset += limit
@@ -65,6 +66,7 @@ def get_all_databases_info(access_token: str) -> list[Database]:
 
     clusters = _get_all_cluster_info(access_token=access_token)
 
+    print("Parsing data...")
     for cluster in clusters:
         databases_information += _parse_databases_from_cluster(
             access_token=access_token,

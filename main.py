@@ -9,14 +9,14 @@ if __name__ == '__main__':
     # Establish connection with Rubrik RSC
     rsc_access_token = connect.open_session()
 
-    print("Collecting Data...")
+    print("Step 1. Collect and Process Data:")
     in_compliance, non_compliance = controller.get_compliance(
         access_token=rsc_access_token)
     summary = controller.get_summary_data(
         in_compliance=in_compliance,
         non_compliance=non_compliance)
 
-    print("Writing to file...")
+    print("Step 2. Write to file:")
     file_path = write_to_excel.generate_report(
         summary=summary,
         in_compliance=in_compliance,

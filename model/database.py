@@ -7,7 +7,7 @@ class Database():
     def __init__(self, id: str, name: str, database_type: str, location: str,
                  last_snapshot_time: str, log_backup_delay: Optional[int],
                  last_recovery_time: str, sla_id: str, sla_name: str,
-                 log_backup_frequency: str, cluster: Cluster) -> None:
+                 log_backup_frequency: Optional[int], cluster: Cluster) -> None:
         self.id = id
         self.name = name
         self.location = location
@@ -17,7 +17,7 @@ class Database():
         self.last_recovery_time = iso_to_date(last_recovery_time)
         self.sla_id = sla_id
         self.sla_name = sla_name
-        self.log_backup_frequency = log_backup_frequency
+        self.log_backup_frequency = seconds_to_duration(log_backup_frequency)
         self.cluster = cluster
 
     def __str__(self):

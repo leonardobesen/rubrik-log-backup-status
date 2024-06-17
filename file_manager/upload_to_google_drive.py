@@ -50,6 +50,6 @@ def upload_excel_to_drive(file_path: str, folder_id: list[str]):
         file = drive_service.files().create(
             body=file_metadata, media_body=media, fields='id', supportsAllDrives=True
         ).execute()
-        print('Successfully Uploaded to Google Drive the File ID:', file.get('id'))
+        print('Successfully Upload to Google Drive the File ID:', file.get('id'))
     except Exception as e:
         print(f'Unable to upload file due to {e}')
