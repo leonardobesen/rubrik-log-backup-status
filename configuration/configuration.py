@@ -63,11 +63,6 @@ def get_drive_folder_id() -> Optional[list[str]]:
 
 
 def non_compliant_threshold() -> float:
-    '''
-    Log Backup Frequency multiplier that defines when a Log Backup Delay is Non Compliant (Out of Compliance).
-    The default value is always 1, increasing in a factor of 1 (to 1.5) will make that 
-    the Log Backup Delay has to be 1.5 times higher the Log Backup Frequency to be considered Non Compliant.
-    '''
     config = load_config()
     try:
         NON_COMPLIANCE_THRESHOLD = config["non_compliance_threshold"]

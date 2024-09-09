@@ -57,4 +57,5 @@ You must create a file named `google_drive.json` on `../rubrik-daily-check/confi
 ## Log Backup Threshold Multiplier
 
 Log Backup Frequency multiplier that defines when a Log Backup Delay is Non Compliant (Out of Compliance).
-The default value is always 1.0, increasing in a factor of 0.5 (to 1.5) will make that the Log Backup Delay has to be 1.5 times higher the Log Backup Frequency to be considered Non Compliant.
+The default value is always 1 and the value must be equal or greater than 1. 
+Example: increasing it by 0.5 (to 1.5) will make that the Log Backup Delay has to be 1.5 times higher the Log Backup Frequency to be considered Non Compliant.
