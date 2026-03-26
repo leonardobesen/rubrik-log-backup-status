@@ -52,7 +52,7 @@ def get_google_config_path() -> Optional[str]:
 def get_drive_folder_id() -> Optional[list[str]]:
     config = load_config()
     try:
-        FOLDER_ID = config["google_drive_upload_folder_id"]
+        FOLDER_ID = config["google_drive_upload_folder_ids"]
 
         if FOLDER_ID == []:
             return None
