@@ -49,5 +49,20 @@ def get_summary_data(in_compliance: list[Database], non_compliance: list[Databas
             "ORACLE_OK": sum(1 for db in in_compliance if db.database_type == "DATABASE_TYPE_ORACLE" and db.cluster.name.lower() == cluster),
             "ORACLE_NOK": sum(1 for db in non_compliance if db.database_type == "DATABASE_TYPE_ORACLE" and db.cluster.name.lower() == cluster)
         }
+        
+        if summary[cluster]["OK"] > 0 and summary[cluster]["NOK"] > 0:
+            summary[cluster]["% Total Compliance"] = f"{summary[cluster]['OK'] / (summary[cluster]['OK'] + summary[cluster]['NOK']) * 100:.2f}%"
+        else:
+            summary[cluster]["% Total Compliance"] = "N/A"
+    
+        if summary[cluster]["SQL_OK"] > 0 and summary[cluster]["SQL_NOK"] > 0:
+            summary[cluster]["% SQL Compliance"] = f"{summary[cluster]['SQL_OK'] / (summary[cluster]['SQL_OK'] + summary[cluster]['SQL_NOK']) * 100:.2f}%"
+        else:
+            summary[cluster]["% SQL Compliance"] = "N/A"
+            
+        if summary[cluster]["ORACLE_OK"] > 0 and summary[cluster]["ORACLE_NOK"] > 0:
+            summary[cluster]["% ORACLE Compliance"] = f"{summary[cluster]['ORACLE_OK'] / (summary[cluster]['ORACLE_OK'] + summary[cluster]['ORACLE_NOK']) * 100:.2f}%"
+        else:
+            summary[cluster]["% ORACLE Compliance"] = "N/A"
 
     return summary

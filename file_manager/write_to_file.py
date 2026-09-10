@@ -49,7 +49,10 @@ def write_summary_data(writer: pd.ExcelWriter, summary: dict) -> pd.ExcelWriter:
         'SQL OK': summary[cluster]["SQL_OK"],
         'SQL NOK': summary[cluster]["SQL_NOK"],
         'Oracle OK': summary[cluster]["ORACLE_OK"],
-        'Oracle NOK': summary[cluster]["ORACLE_NOK"]
+        'Oracle NOK': summary[cluster]["ORACLE_NOK"],
+        '% Total Compliance': summary[cluster]["% Total Compliance"],
+        '% SQL Compliance': summary[cluster]["% SQL Compliance"],
+        '% Oracle Compliance': summary[cluster]["% ORACLE Compliance"]
     } for cluster in summary])
     df_summary.to_excel(writer, sheet_name=Sheets.SUMMARY.value, index=False)
 
